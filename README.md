@@ -111,4 +111,4 @@ With JIT-compiler optimizations, it should not be much slower than implementing 
 
 This project is licensed under the MIT License.
 
-[logo]: ./doc/logo-128.png
+[logo]: https://weisrc.github.io/obsx/logo-128.png

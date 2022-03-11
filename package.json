@@ -1,6 +1,8 @@
 {
 	"name": "obsx",
 	"version": "0.0.0",
+	"types": "dist/types",
+	"main": "dist/obsx.cjs.js",
 	"exports": {
 		"require": "./dist/obsx.cjs.js",
 		"import": "./dist/obsx.es.js"
