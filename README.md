@@ -15,7 +15,7 @@ for **JavaScript** and **TypeScript**
 - **Splendid**: observe any values and function calls
 - **Smart**: all nested values notified on parent change
 - **Simple**: 1 function, 4 symbols
-- **Sweet**: similar accessor syntax
+- **Sweet**: beloved accessor syntax
 - **Speedy**: location based proxy allocation
 
 ## Documentation

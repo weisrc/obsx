@@ -6,7 +6,9 @@
 		"import": "./dist/obsx.es.js"
 	},
 	"scripts": {
-		"build": "tsc && vite build"
+		"build": "tsc && vite build",
+		"test": "yarn jest",
+		"docs": "mkdir -p docs && cp -r doc/. docs"
 	},
 	"devDependencies": {
 		"@types/jest": "^27.4.1",

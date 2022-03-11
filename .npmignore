@@ -1,0 +1,10 @@
+test
+src
+doc
+docs
+.gitignore
+jest.config.json
+tsconfig.json
+vite.config.ts
+yarn.lock
+.github
