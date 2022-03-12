@@ -1,66 +1,97 @@
-import { value, onChange, onApply, notifyChange } from "./symbols";
-import { Observable } from "./types";
+import { Node, OnCall, OnSet, OnNode, Register } from "./types";
+import {
+	value,
+	reflect,
+	depth,
+	compare,
+	onCall,
+	onNode,
+	onSet,
+} from "./symbols";
 
-function _observe(
-	get: () => any,
+const createRegister = <T>(handlers: T[]): Register<T> => {
+	return (handler) => {
+		handlers.push(handler);
+		return () => {
+			const i = handlers.indexOf(handler);
+			if (i >= 0) handlers.splice(i, 1);
+		};
+	};
+};
+
+const createNode = <T>(
+	get: any,
 	set: (value: any) => any,
-	apply: (...args: any) => any
-): any {
-	const applyObservers = new Map();
-	const changeObesrvers = new Map();
-	const propertyProxies: any[] = [];
+	call: (args: any[]) => any
+): Node<T> => {
 	let previous = get();
-	const target: any = Object.defineProperty(
-		(...args: any) => {
-			const result = apply(...args);
-			for (const applier of applyObservers.keys()) applier(...args);
-			return result;
-		},
-		value,
+	const nodes: Node<unknown>[] = [];
+	const onSets: OnSet<T>[] = [];
+	const onCalls: OnCall<any>[] = [];
+	const onNodes: OnNode<any>[] = [];
+	return new Proxy(
+		Object.assign(
+			Object.defineProperty(
+				(...args: any) => {
+					const res = call(args);
+					for (const h of onCalls) h(args, res);
+					return res;
+				},
+				value,
+				{
+					get,
+					set(v) {
+						set(v);
+						this[compare]();
+					},
+				}
+			),
+			{
+				[depth]: 0,
+				[onSet]: createRegister(onSets),
+				[onCall]: createRegister(onCalls),
+				[onNode]: createRegister(onNodes),
+				[reflect]: () => ({
+					get,
+					set,
+					call,
+					previous,
+					nodes,
+					onSets,
+					onCalls,
+					onNodes,
+				}),
+				// @ts-ignore
+				[compare](d = this[depth]) {
+					const current = get();
+					if (current === previous) {
+						if (d-- === 0) return;
+					} else d = this[depth];
+					for (const h of onSets) h(current, previous);
+					for (const n of nodes) n[compare](d);
+					previous = current;
+				},
+			}
+		) as any,
 		{
-			get,
-			set(current) {
-				set(current);
-				target[notifyChange]();
+			get(target, key) {
+				if (key in target) return target[key];
+				const node = createNode<any>(
+					() => get()?.[key],
+					(v) => (get()[key] = v),
+					(args: any) => get()?.[key](...args)
+				);
+				nodes.push((target[key] = node));
+				for (const h of onNodes) h(key, node);
+				return node;
 			},
 		}
 	);
-	target[notifyChange] = (force = false) => {
-		const current = get();
-		if (!force && current === previous) return;
-		for (const observer of changeObesrvers.keys()) observer(current, previous);
-		for (const propertyProxy of propertyProxies)
-			propertyProxy[notifyChange](force);
-		previous = current;
-	};
-	target[onChange] = (observer: any) => {
-		changeObesrvers.set(observer, 0);
-		return () => changeObesrvers.delete(observer);
-	};
-	target[onApply] = (observer: any) => {
-		applyObservers.set(observer, 0);
-		return () => applyObservers.delete(observer);
-	};
-	return new Proxy(target, {
-		get: (target, key) => {
-			if (key in target) return target[key];
-			const proxy = _observe(
-				() => get()?.[key],
-				(value) => (get()[key] = value),
-				(...args) => get()?.[key](...args)
-			);
-			propertyProxies.push(proxy);
-			target[key] = proxy;
-			return proxy;
-		},
-	});
-}
+};
 
-export function observe<T>(value: T): Observable<T> {
-	return _observe(
+export const observe = <T>(value: T) =>
+	createNode<T>(
 		() => value,
-		(current) => (value = current),
-		// @ts-ignore
-		(...args) => value?.(...args)
+		(current: any) => (value = current),
+		(args: any) => (value as any)?.(...args)
 	);
-}

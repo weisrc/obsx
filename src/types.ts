@@ -1,33 +1,50 @@
-import { notifyChange } from ".";
-import { value, onChange, onApply } from "./symbols";
+import {
+	value,
+	reflect,
+	depth,
+	compare,
+	onCall,
+	onNode,
+	onSet,
+} from "./symbols";
 
-export type Function = (...args: unknown[]) => void;
+export type OnSet<T> = (current: T, previous: T) => void;
+export type OnNode<T> = (key: keyof T, node: Node<T>) => void;
+export type Register<T> = (handler: T) => () => void;
+export type OnCall<T extends Fn> = (
+	args: Parameters<T>,
+	res: ReturnType<T>
+) => void;
 
-export type ObserverInit<T> = (observer: T) => () => void;
+export interface Reflect<T> {
+	get(): T;
+	set(v: T): T;
+	call: T extends Fn ? T : never;
+	previous: T;
+	nodes: Node<T[keyof T]>[];
+	onSets: OnSet<T>[];
+	onCalls: T extends Fn ? OnCall<T>[] : never;
+	onNodes: OnNode<T>[];
+}
 
-export type ChangeObserver<T> = (current: T, previous: T) => void;
-export type ApplyObserver<T extends Function> = (...args: Parameters<T>) => void;
-
-export type ObservableValue<T> = {
+export type Node<T> = {
 	[value]: T;
-	[notifyChange](force?: boolean): void;
-	readonly [onChange]: ObserverInit<ChangeObserver<T>>;
+	[compare](depth?: number): void;
+	[reflect](): Reflect<T>;
+	[depth]: number;
+	readonly [onSet]: Register<OnSet<T>>;
+} & (T extends object ? ObjNode<T> : {}) &
+	(T extends Fn ? FnNode<T> : {});
+
+type Fn = (...args: any) => any;
+
+type ObjNode<T extends object, U extends keyof T = keyof T> = {
+	[K in U]: Node<Required<T>[K]>;
+} & {
+	readonly [onNode]: Register<OnNode<T>>;
 };
 
-// workaround to get all keys (even prototype keys)
-export type ObservableObject<T, U extends keyof T = keyof T> = T extends object
-	? {
-			[k in U]: Observable<Required<T>[k]>;
-	  }
-	: {};
-
-export type ObservableFunction<T> = T extends (...args: any) => any
-	? {
-			(...args: Parameters<T>): ReturnType<T>;
-			readonly [onApply]: ObserverInit<ApplyObserver<T>>;
-	  }
-	: {};
-
-export type Observable<T> = ObservableValue<T> &
-	ObservableObject<T> &
-	ObservableFunction<T>;
+type FnNode<T extends Fn> = {
+	(...args: Parameters<T>): ReturnType<T>;
+	readonly [onCall]: Register<OnCall<T>>;
+};

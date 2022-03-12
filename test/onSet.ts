@@ -1,9 +1,9 @@
-import { observe, value, onChange } from "../src";
+import { observe, value, onSet } from "../src";
 
 test("should callback", () => {
 	let times = 0;
 	const data = observe(1);
-	data[onChange]((current, previous) => {
+	data[onSet]((current, previous) => {
 		expect(current).toBe(2);
 		expect(previous).toBe(1);
 		times++;
@@ -15,7 +15,7 @@ test("should callback", () => {
 test("should only callback when value changed", () => {
 	const data = observe(1);
 	let times = 0;
-	data[onChange]((current, previous) => {
+	data[onSet]((current, previous) => {
 		expect(current).toBe(2);
 		expect(previous).toBe(1);
 		times++;
@@ -29,7 +29,7 @@ test("should only callback when value changed", () => {
 test("should not callback when unsubscribed", () => {
 	const data = observe(1);
 	let times = 0;
-	data[onChange](() => {
+	data[onSet](() => {
 		times++;
 	})();
 	data[value] = 2;

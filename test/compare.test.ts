@@ -1,29 +1,29 @@
-import { observe, value, onChange, notifyChange } from "../src";
+import { observe, value, onSet, compare } from "../src";
 
 test("should not call onChange when not forced", () => {
 	const data = observe(1);
 	let times = 0;
-	data[onChange](() => {
+	data[onSet](() => {
 		times++;
 	});
-	data[notifyChange]();
+	data[compare]();
 	expect(times).toBe(0);
 });
 
 test("should not call onChange when forced", () => {
 	const data = observe(1);
 	let times = 0;
-	data[onChange](() => {
+	data[onSet](() => {
 		times++;
 	});
-	data[notifyChange](true);
+	data[compare](-1);
 	expect(times).toBe(1);
 });
 
 test("should only callback when value changed", () => {
 	const data = observe(1);
 	let times = 0;
-	data[onChange]((current, previous) => {
+	data[onSet]((current, previous) => {
 		expect(current).toBe(2);
 		expect(previous).toBe(1);
 		times++;
@@ -37,7 +37,7 @@ test("should only callback when value changed", () => {
 test("should notify for nested properties", () => {
 	const data = observe({ a: { b: 1 } });
 	let times = 0;
-	data.a.b[onChange]((current, previous) => {
+	data.a.b[onSet]((current, previous) => {
 		expect(current).toBe(2);
 		expect(previous).toBe(1);
 		times++;
@@ -49,7 +49,7 @@ test("should notify for nested properties", () => {
 test("should only notify for nested properties when changed", () => {
 	const data = observe({ a: { b: 1 } });
 	let times = 0;
-	data.a.b[onChange]((current, previous) => {
+	data.a.b[onSet]((current, previous) => {
 		expect(current).toBe(2);
 		expect(previous).toBe(1);
 		times++;
