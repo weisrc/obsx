@@ -9,7 +9,7 @@
 	},
 	"scripts": {
 		"build": "tsc && vite build",
-		"test": "yarn jest",
+		"test": "yarn jest --coverage",
 		"docs": "mkdir -p docs && cp -r doc/. docs"
 	},
 	"devDependencies": {
