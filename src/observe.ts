@@ -1,97 +1,49 @@
-import { Node, OnCall, OnSet, OnNode, Register } from "./types";
-import {
-	value,
-	reflect,
-	depth,
-	compare,
-	onCall,
-	onNode,
-	onSet,
-} from "./symbols";
+import { Observable, info } from "./types";
+import { use } from "./run";
+import { emit } from "./emit";
+import { bubble } from "./bubble";
+import { Observers } from ".";
 
-const createRegister = <T>(handlers: T[]): Register<T> => {
-	return (handler) => {
-		handlers.push(handler);
-		return () => {
-			const i = handlers.indexOf(handler);
-			if (i >= 0) handlers.splice(i, 1);
-		};
-	};
-};
+export function observe<T>(data: T): Observable<T> {
+	let root = [data];
+	let fn = () => root;
+	return _observe(fn, fn, fn)[0];
+}
 
-const createNode = <T>(
-	get: any,
-	set: (value: any) => any,
-	call: (args: any[]) => any
-): Node<T> => {
-	let previous = get();
-	const nodes: Node<unknown>[] = [];
-	const onSets: OnSet<T>[] = [];
-	const onCalls: OnCall<any>[] = [];
-	const onNodes: OnNode<any>[] = [];
-	return new Proxy(
-		Object.assign(
-			Object.defineProperty(
+function _observe(
+	get: () => any,
+	set: (data: any) => any,
+	call: any,
+	prev?: any
+): any {
+	call[info] = {
+		prev,
+		call: new Map(),
+		set: new Map(),
+	} as Observers<any>;
+	return new Proxy(Object.defineProperty(call, "$", { get, set }), {
+		get(_, key, proxy) {
+			if (key in call) return call[key];
+			let obs = _observe(
+				() => {
+					use(obs);
+					return get()?.[key];
+				},
+				(value) => {
+					get()[key] = value;
+					let called: any[] = [];
+					bubble(obs, (n) => emit("set", n, [], called));
+				},
 				(...args: any) => {
-					const res = call(args);
-					for (const h of onCalls) h(args, res);
+					use(obs);
+					let res = get()?.[key](...args);
+					emit("call", obs, [args, res] as never);
 					return res;
 				},
-				value,
-				{
-					get,
-					set(v) {
-						set(v);
-						this[compare]();
-					},
-				}
-			),
-			{
-				[depth]: 0,
-				[onSet]: createRegister(onSets),
-				[onCall]: createRegister(onCalls),
-				[onNode]: createRegister(onNodes),
-				[reflect]: () => ({
-					get,
-					set,
-					call,
-					previous,
-					nodes,
-					onSets,
-					onCalls,
-					onNodes,
-				}),
-				// @ts-ignore
-				[compare](d = this[depth]) {
-					const current = get();
-					if (current === previous) {
-						if (d-- === 0) return;
-					} else d = this[depth];
-					for (const h of onSets) h(current, previous);
-					for (const n of nodes) n[compare](d);
-					previous = current;
-				},
-			}
-		) as any,
-		{
-			get(target, key) {
-				if (key in target) return target[key];
-				const node = createNode<any>(
-					() => get()?.[key],
-					(v) => (get()[key] = v),
-					(args: any) => get()?.[key](...args)
-				);
-				nodes.push((target[key] = node));
-				for (const h of onNodes) h(key, node);
-				return node;
-			},
-		}
-	);
-};
+				proxy
+			);
 
-export const observe = <T>(value: T) =>
-	createNode<T>(
-		() => value,
-		(current: any) => (value = current),
-		(args: any) => (value as any)?.(...args)
-	);
+			return (call[key] = obs);
+		},
+	});
+}
