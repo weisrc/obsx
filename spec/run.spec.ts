@@ -29,5 +29,5 @@ test("should work nested", () => {
 	});
 	run(fn);
 	o.a.$++;
-	expect(fn.mock.calls.length).toBe(2);
+	expect(nested.mock.calls.length).toBe(2);
 });
