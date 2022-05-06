@@ -1,3 +1,5 @@
+# Warning: Documentation is out of date! Please refer to TypeScript intellisense. (New Accessor is `$`, not `Symbol(value)`)
+
 <div align=center>
 
 ![logo][logo]
