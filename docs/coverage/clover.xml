@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1651880304227" clover="3.2.0">
+  <project timestamp="1651880304227" name="All files">
+    <metrics statements="71" coveredstatements="71" conditionals="4" coveredconditionals="4" methods="21" coveredmethods="21" elements="96" coveredelements="96" complexity="0" loc="71" ncloc="71" packages="1" files="9" classes="9"/>
+    <file name="bubble.ts" path="/home/runner/work/obsx/obsx/src/bubble.ts">
+      <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <line num="1" count="11" type="stmt"/>
+      <line num="3" count="11" type="stmt"/>
+      <line num="7" count="371" type="stmt"/>
+    </file>
+    <file name="emit.ts" path="/home/runner/work/obsx/obsx/src/emit.ts">
+      <metrics statements="8" coveredstatements="8" conditionals="3" coveredconditionals="3" methods="1" coveredmethods="1"/>
+      <line num="1" count="11" type="stmt"/>
+      <line num="2" count="11" type="stmt"/>
+      <line num="15" count="11" type="stmt"/>
+      <line num="21" count="336" type="cond" truecount="1" falsecount="0"/>
+      <line num="22" count="335" type="stmt"/>
+      <line num="23" count="323" type="cond" truecount="1" falsecount="0"/>
+      <line num="25" count="113" type="stmt"/>
+      <line num="26" count="113" type="stmt"/>
+    </file>
+    <file name="ignore.ts" path="/home/runner/work/obsx/obsx/src/ignore.ts">
+      <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <line num="1" count="11" type="stmt"/>
+      <line num="3" count="11" type="stmt"/>
+      <line num="4" count="4" type="stmt"/>
+      <line num="5" count="4" type="stmt"/>
+      <line num="6" count="4" type="stmt"/>
+      <line num="7" count="4" type="stmt"/>
+    </file>
+    <file name="index.ts" path="/home/runner/work/obsx/obsx/src/index.ts">
+      <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <line num="1" count="11" type="stmt"/>
+      <line num="2" count="11" type="stmt"/>
+      <line num="3" count="11" type="stmt"/>
+      <line num="4" count="11" type="stmt"/>
+      <line num="5" count="11" type="stmt"/>
+      <line num="6" count="11" type="stmt"/>
+      <line num="7" count="11" type="stmt"/>
+      <line num="8" count="11" type="stmt"/>
+    </file>
+    <file name="observe.ts" path="/home/runner/work/obsx/obsx/src/observe.ts">
+      <metrics statements="22" coveredstatements="22" conditionals="1" coveredconditionals="1" methods="8" coveredmethods="8"/>
+      <line num="1" count="11" type="stmt"/>
+      <line num="2" count="11" type="stmt"/>
+      <line num="3" count="11" type="stmt"/>
+      <line num="4" count="11" type="stmt"/>
+      <line num="7" count="11" type="stmt"/>
+      <line num="8" count="27" type="stmt"/>
+      <line num="9" count="331" type="stmt"/>
+      <line num="10" count="27" type="stmt"/>
+      <line num="19" count="77" type="stmt"/>
+      <line num="24" count="77" type="stmt"/>
+      <line num="26" count="1253" type="cond" truecount="1" falsecount="0"/>
+      <line num="27" count="50" type="stmt"/>
+      <line num="29" count="545" type="stmt"/>
+      <line num="30" count="545" type="stmt"/>
+      <line num="33" count="110" type="stmt"/>
+      <line num="34" count="110" type="stmt"/>
+      <line num="35" count="328" type="stmt"/>
+      <line num="38" count="4" type="stmt"/>
+      <line num="39" count="4" type="stmt"/>
+      <line num="40" count="4" type="stmt"/>
+      <line num="41" count="4" type="stmt"/>
+      <line num="46" count="50" type="stmt"/>
+    </file>
+    <file name="on.ts" path="/home/runner/work/obsx/obsx/src/on.ts">
+      <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+      <line num="1" count="11" type="stmt"/>
+      <line num="3" count="11" type="stmt"/>
+      <line num="8" count="42" type="stmt"/>
+      <line num="9" count="42" type="stmt"/>
+      <line num="10" count="42" type="stmt"/>
+    </file>
+    <file name="run.ts" path="/home/runner/work/obsx/obsx/src/run.ts">
+      <metrics statements="12" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
+      <line num="1" count="11" type="stmt"/>
+      <line num="4" count="11" type="stmt"/>
+      <line num="6" count="11" type="stmt"/>
+      <line num="7" count="4" type="stmt"/>
+      <line num="8" count="4" type="stmt"/>
+      <line num="9" count="6" type="stmt"/>
+      <line num="10" count="6" type="stmt"/>
+      <line num="11" count="6" type="stmt"/>
+      <line num="12" count="10" type="stmt"/>
+      <line num="13" count="6" type="stmt"/>
+      <line num="14" count="6" type="stmt"/>
+      <line num="16" count="4" type="stmt"/>
+    </file>
+    <file name="types.ts" path="/home/runner/work/obsx/obsx/src/types.ts">
+      <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <line num="1" count="11" type="stmt"/>
+    </file>
+    <file name="watch.ts" path="/home/runner/work/obsx/obsx/src/watch.ts">
+      <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
+      <line num="1" count="11" type="stmt"/>
+      <line num="2" count="11" type="stmt"/>
+      <line num="5" count="11" type="stmt"/>
+      <line num="6" count="15" type="stmt"/>
+      <line num="7" count="39" type="stmt"/>
+      <line num="8" count="15" type="stmt"/>
+    </file>
+  </project>
+</coverage>
